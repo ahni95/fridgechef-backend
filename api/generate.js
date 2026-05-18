@@ -3,7 +3,6 @@ const { getUsage, incrementUsage } = require('../src/usageStore');
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const FREE_DAILY_LIMIT = parseInt(process.env.FREE_DAILY_LIMIT || '3');
-const APP_SECRET = process.env.APP_SECRET || 'fridgechef2026';
 
 const RECIPE_PROMPT = `Analyse cette photo de réfrigérateur ou d'ingrédients et génère UNE recette délicieuse.
 
@@ -54,17 +53,12 @@ function parseRecipe(rawText) {
 }
 
 module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'Méthode non autorisée' });
 
   const deviceId = req.headers['x-device-id'] || 'anonymous';
   const isPremium = req.headers['x-is-premium'] === 'true';
-  const appSecret = req.headers['x-app-secret'] || '';
-
-  // Vérification du secret
-  if (appSecret !== APP_SECRET) {
-    console.error(`Secret mismatch — reçu: "${appSecret}", attendu: "${APP_SECRET}"`);
-    return res.status(401).json({ error: 'Non autorisé', hint: 'Secret invalide' });
-  }
 
   const { imageBase64, mediaType = 'image/jpeg' } = req.body || {};
   if (!imageBase64) return res.status(400).json({ error: 'Image manquante' });
