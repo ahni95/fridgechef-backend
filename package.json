@@ -1,0 +1,10 @@
+{
+  "name": "fridgechef-backend",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend FridgeChef AI - detection d'ingredients et generation de recettes via Gemini 3.1 Flash-Lite",
+  "engines": {
+    "node": ">=18"
+  }
+}
