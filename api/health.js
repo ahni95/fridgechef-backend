@@ -11,7 +11,10 @@ export default function handler(req, res) {
       config: {
         geminiKey: !!process.env.GEMINI_API_KEY,
         appSecret: !!process.env.APP_SECRET,
-        redis: !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN),
+        redis: !!(
+          (process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL) &&
+          (process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN)
+        ),
         freeDailyLimit: parseInt(process.env.FREE_DAILY_LIMIT || "3", 10),
       },
       time: new Date().toISOString(),
